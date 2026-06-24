@@ -1,6 +1,6 @@
 # Day 1 - ReAct Agent From Scratch
 
-Part of Week 15 - AI Agents (Hyderabad ML Mission 2026)
+Part of Week 15 - AI Agents 
 
 ## Overview
 
