@@ -1,0 +1,60 @@
+from langgraph.graph import (
+    StateGraph,
+    START,
+    END
+)
+from state import AgentState
+from nodes import (
+    search_node,
+    parser_node,
+    retry_node,
+    answer_node,
+    route
+    )
+
+builder=StateGraph(
+    AgentState
+)
+builder.add_node(
+    "parser",
+    parser_node
+)
+builder.add_node(
+    "search",
+    search_node
+)
+builder.add_node(
+    "retry",
+    retry_node
+)
+builder.add_node(
+    "answer",
+    answer_node
+)
+builder.add_edge(
+    START,
+    "parser"
+)
+builder.add_edge(
+    "parser",
+    "search"
+)
+builder.add_conditional_edges(
+    "search",
+    route,
+    {
+        "answer":"answer",
+        "retry":"retry",
+        "stop":END
+    }
+)
+builder.add_edge(
+    "retry",
+    "parser"
+)
+builder.add_edge(
+    "answer",
+    END
+)
+
+graph=builder.compile()

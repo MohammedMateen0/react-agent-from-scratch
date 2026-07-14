@@ -1,0 +1,38 @@
+[
+    {
+        "name":"Paradise",
+        "area":"Secunderabad",
+        "cuisine":"Biryani",
+        "budget":700
+    },
+    {
+        "name":"Shah Ghouse",
+        "area":"Tolichowki",
+        "cuisine":"Biryani",
+        "budget":500
+    },
+    {
+        "name":"Bawarchi",
+        "area":"RTC Cross Roads",
+        "cuisine":"Biryani",
+        "budget":600
+    },
+    {
+        "name":"Roastery Coffee House",
+        "area":"Banjara Hills",
+        "cuisine":"Cafe",
+        "budget":900
+    },
+    {
+        "name":"Chutneys",
+        "area":"Jubilee Hills",
+        "cuisine":"South Indian",
+        "budget":450
+    },
+    {
+        "name":"Ohri's Jiva",
+        "area":"Begumpet",
+        "cuisine":"North Indian",
+        "budget":800
+    }
+]
