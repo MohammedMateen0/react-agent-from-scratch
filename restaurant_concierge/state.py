@@ -15,3 +15,5 @@ class AgentState(TypedDict):
     iterations:int
 
     total_tokens:int
+
+    validation:bool

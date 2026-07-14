@@ -7,6 +7,8 @@ from tools import RestaurantTool
 from utils import extract_json,count_tokens
 from config import MAX_TOKEN_BUDGET
 from guardrails import execute_with_timeout
+from pydantic import ValidationError
+from schemas import RestaurantQuery
 
 llm=ChatOllama(
     model="llama3.2",
@@ -152,3 +154,25 @@ Write a friendly response.
     return {
         "answer":response.content
     }
+
+def validation_node(state):
+    try:
+        RestaurantQuery(
+            cuisine=state["cuisine"],
+            budget=state["budget"],
+            area=state["area"]
+        )
+        return {
+            "validation":True
+        }
+    except ValidationError as e:
+        print()
+        print("Validation Error")
+        print(e)
+        return {
+            "validation":False
+        }
+def validation_route(state):
+    if state["validation"]:
+        return "search"
+    return "retry"

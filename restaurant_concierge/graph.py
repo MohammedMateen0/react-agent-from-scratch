@@ -12,7 +12,9 @@ from nodes import (
     route,
     budget_node,
     budget_route,
-    fallback_node
+    fallback_node,
+    validation_node,
+    validation_route
     )
 
 builder=StateGraph(
@@ -42,6 +44,10 @@ builder.add_node(
     "fallback",
     fallback_node
 )
+builder.add_node(
+    "validation",
+    validation_node
+)
 
 builder.add_edge(
     START,
@@ -49,7 +55,15 @@ builder.add_edge(
 )
 builder.add_edge(
     "parser",
-    "budget"
+    "validation"
+)
+builder.add_conditional_edges(
+    "validation",
+    validation_route,
+    {
+        "search": "search",
+        "retry": "retry"
+    }
 )
 builder.add_conditional_edges(
     "budget",
