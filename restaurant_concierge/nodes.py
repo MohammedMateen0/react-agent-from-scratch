@@ -83,18 +83,6 @@ def retry_node(state):
         "iterations":state["iterations"]+1
     }
 
-def answer_node(state):
-     restaurants=state["tool_result"]["restaurants"]
-     text=''
-     for r in restaurants:
-         text+=(
-             f"{r['name']}"
-             f"{r['area']}"
-             f"₹{r['budget']}\n"
-         )
-     return {
-             "answer":text
-         }
 
 MAX_ITERATIONS=3
 
@@ -128,3 +116,39 @@ def budget_route(state):
     if state["total_tokens"]>=MAX_TOKEN_BUDGET:
         return "stop"
     return "search"
+
+def answer_node(state):
+
+    restaurants = state["tool_result"]["restaurants"]
+
+    restaurant_json = json.dumps(
+        restaurants,
+        indent=2
+    )
+    prompt = f"""
+You are a friendly restaurant assistant.
+
+User Question:
+{state["question"]}
+
+Restaurant Search Result:
+
+{restaurant_json}
+
+Rules:
+
+- Use ONLY the restaurants listed above.
+- Never invent restaurant names.
+- Never invent areas.
+- Never invent cuisines.
+- Never invent budgets.
+- If the list is empty, politely tell the user that no restaurants were found.
+- Do not ask follow-up questions.
+- End the response after presenting the restaurants.
+Write a friendly response.
+- Don't add Hi hello and Hope etc just give results by location price(in ₹) and cuisine using emojies
+"""
+    response=llm.invoke(prompt)
+    return {
+        "answer":response.content
+    }

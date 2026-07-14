@@ -12,4 +12,5 @@ while True:
         }
     )
     print()
-    print(result["tool_result"])
+    print("\nAssistant:\n")
+    print(result["answer"])
