@@ -17,7 +17,12 @@ llm=ChatOllama(
 
 def parser_node(state):
     question=state["question"]
+    history=state.get("history",[])
     prompt=f'''
+Conversation History:
+
+{history}
+
 You are an information extraction system.
 
 Extract restaurant search parameters.
@@ -174,5 +179,28 @@ def validation_node(state):
         }
 def validation_route(state):
     if state["validation"]:
-        return "search"
+        return "budget"
     return "retry"
+
+def memory_node(state):
+    history=state.get("history",[])
+    history.append(
+        {
+            "user":state["question"]
+        }
+    )
+    return {
+        "history":history
+    }
+
+def save_answer_node(state):
+    history=state["history"]
+
+    history.append(
+        {
+            "assistant":state["answer"]
+        }
+    )
+    return {
+        "history":history
+    }

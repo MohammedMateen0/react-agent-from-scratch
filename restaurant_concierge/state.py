@@ -17,3 +17,5 @@ class AgentState(TypedDict):
     total_tokens:int
 
     validation:bool
+
+    history:list

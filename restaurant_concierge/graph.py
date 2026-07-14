@@ -3,6 +3,7 @@ from langgraph.graph import (
     START,
     END
 )
+from langgraph.checkpoint.memory import MemorySaver
 from state import AgentState
 from nodes import (
     search_node,
@@ -61,7 +62,7 @@ builder.add_conditional_edges(
     "validation",
     validation_route,
     {
-        "search": "search",
+        "budget": "budget",
         "retry": "retry"
     }
 )
@@ -96,4 +97,11 @@ builder.add_edge(
     END
 )
 
-graph=builder.compile()
+
+memory = MemorySaver()
+
+graph = builder.compile(
+    checkpointer=memory
+)
+
+
