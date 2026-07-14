@@ -6,6 +6,7 @@ print("Imported json")
 from tools import RestaurantTool
 from utils import extract_json,count_tokens
 from config import MAX_TOKEN_BUDGET
+from guardrails import execute_with_timeout
 
 llm=ChatOllama(
     model="llama3.2",
@@ -57,13 +58,22 @@ tool=RestaurantTool()
 
 
 def search_node(state):
-    results=tool.search(
+    results=execute_with_timeout(
+        tool.search,
         cuisine=state["cuisine"] or None,
         budget=state["budget"],
         area=state["area"] or None
     )
-
-    return {
+    if results is None:
+        return {
+            "tool_result": {
+                "success":False,
+                "timeout":True,
+                "restaurants":[]
+            }
+        }
+    else:
+        return {
         "tool_result":results
     }
 
@@ -89,11 +99,25 @@ def answer_node(state):
 MAX_ITERATIONS=3
 
 def route(state):
-    if state["tool_result"]["success"]:
+
+    result = state["tool_result"]
+
+    if result.get("timeout"):
+        return "fallback"
+
+    if result["success"]:
         return "answer"
-    if state["iterations"]>=MAX_ITERATIONS:
+
+    if state["iterations"] >= MAX_ITERATIONS:
         return "stop"
+
     return "retry"
+
+def fallback_node(state):
+    return {
+        "answer":
+        "Restaurant service is temporarily unavailable. Please try again later."
+    }
 
 def budget_node(state):
     print(

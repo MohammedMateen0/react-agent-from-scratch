@@ -1,4 +1,5 @@
 import json
+import time
 
 class RestaurantTool:
     def __init__(self):
@@ -15,7 +16,7 @@ class RestaurantTool:
             budget=None,
             area=None
     ):
-        
+               
         results=[]
         for restaurant in self.restaurants:
         

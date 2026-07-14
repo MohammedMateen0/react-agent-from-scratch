@@ -11,7 +11,8 @@ from nodes import (
     answer_node,
     route,
     budget_node,
-    budget_route
+    budget_route,
+    fallback_node
     )
 
 builder=StateGraph(
@@ -37,6 +38,10 @@ builder.add_node(
     "budget",
     budget_node
 )
+builder.add_node(
+    "fallback",
+    fallback_node
+)
 builder.add_edge(
     START,
     "parser"
@@ -59,6 +64,7 @@ builder.add_conditional_edges(
     {
         "answer":"answer",
         "retry":"retry",
+        "fallback":"fallback",
         "stop":END
     }
 )
@@ -68,6 +74,10 @@ builder.add_edge(
 )
 builder.add_edge(
     "answer",
+    END
+)
+builder.add_edge(
+    "fallback",
     END
 )
 
