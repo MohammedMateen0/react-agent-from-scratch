@@ -4,7 +4,8 @@ print("Imported ChatOllama")
 import json
 print("Imported json")
 from tools import RestaurantTool
-from utils import extract_json
+from utils import extract_json,count_tokens
+from config import MAX_TOKEN_BUDGET
 
 llm=ChatOllama(
     model="llama3.2",
@@ -39,13 +40,16 @@ Question:
 {question}
 '''
     response=llm.invoke(prompt)
+    used=count_tokens(prompt)
+    used+=count_tokens(response.content)
     print('\nLLM OUTPUT\n')
     print(response.content)
     data=extract_json(response.content)
     return {
         "cuisine":data["cuisine"],
         "budget":data["budget"],
-        "area":data["area"]
+        "area":data["area"],
+        "total_tokens":state["total_tokens"]+used
     }
 
 
@@ -90,3 +94,13 @@ def route(state):
     if state["iterations"]>=MAX_ITERATIONS:
         return "stop"
     return "retry"
+
+def budget_node(state):
+    print(
+        f"\n Token Used: {state['total_tokens']}"
+    )
+    return {}
+def budget_route(state):
+    if state["total_tokens"]>=MAX_TOKEN_BUDGET:
+        return "stop"
+    return "search"

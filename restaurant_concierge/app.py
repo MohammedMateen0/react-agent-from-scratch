@@ -7,7 +7,8 @@ while True:
     result=graph.invoke(
         {
             "question":question,
-            "iterations":0
+            "iterations":0,
+            "total_tokens":0
         }
     )
     print()

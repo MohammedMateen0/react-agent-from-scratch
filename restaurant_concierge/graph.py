@@ -9,7 +9,9 @@ from nodes import (
     parser_node,
     retry_node,
     answer_node,
-    route
+    route,
+    budget_node,
+    budget_route
     )
 
 builder=StateGraph(
@@ -31,13 +33,25 @@ builder.add_node(
     "answer",
     answer_node
 )
+builder.add_node(
+    "budget",
+    budget_node
+)
 builder.add_edge(
     START,
     "parser"
 )
 builder.add_edge(
     "parser",
-    "search"
+    "budget"
+)
+builder.add_conditional_edges(
+    "budget",
+    budget_route,
+    {
+        "search":"search",
+        "stop":END
+    }
 )
 builder.add_conditional_edges(
     "search",

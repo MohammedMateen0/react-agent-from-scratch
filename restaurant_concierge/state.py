@@ -13,3 +13,5 @@ class AgentState(TypedDict):
     answer:str
 
     iterations:int
+
+    total_tokens:int

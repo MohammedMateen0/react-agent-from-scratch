@@ -34,4 +34,5 @@ class RestaurantTool:
     "count": len(results),
     "restaurants": results
 }
+    
 
